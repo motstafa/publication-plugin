@@ -45,28 +45,28 @@ function my_action()
 
 function cards_shortcode()
 {
-
-  echo '<form class="flex justify-center gap-[7px]" action="#" id="publication-form" method="get">
-  <select id="category_filter" name="category_filter">
-      <option value="">Select Category</option>';
-  $args = array(
-    'post_type' => 'publication',
-    'orderby' => 'title',
-    'order' => 'ASC',
-    'posts_per_page' => -1
-  );
-  $query = new WP_Query($args);
-  while ($query->have_posts()) {
-    $query->the_post();
-    $categorie = get_post_meta(get_the_ID(), 'programs_divisions', true);
-    echo '<option value="' . $categorie . '">' . $categorie . '</option>';
+  
+  echo '<form class="" action="#" id="publication-form" method="get">';
+  $fields = get_post_type_object('publication');
+  $group_fields_id=acf_get_field_groups(array( 'post_type' => 'publication'))[0]['key'];
+  $group_fields=acf_get_fields($group_fields_id);
+  foreach ($group_fields as $field){
+    $field_name = $field['name'];
+    if($field_name=='category' || $field_name=='type'){
+    echo   '<select id="'.$field_name.'_filter" name="'.$field_name.'_filter">
+    <option value="">Select '.$field_name.'</option>';
+    foreach($field['choices'] as $key => $choise){
+      echo '<option value="' . $choise . '">' . $choise . '</option>';     
+    }
+    echo '</select>';
   }
-  wp_reset_postdata();
-  echo '</select>
-  <input type="submit" value="Filter" class="bg-[#092140!important] text-[white] text-[9px] border=[transparent] font-semibold tracking-[0.5px] uppercase padding-[5px_13px] rounded-[6px]">
-</form>
-';
-
+   }
+   echo '<select id="date_selected">
+        <option value"">Sort Results By</option>
+        <option value"DESC">Newest</option>
+        <option value"ASC">Latest</option>
+        </select>';
+  '</form>';
   $args = array(
     'post_type' => 'publication',
     'posts_per_page' => -1, // Show all posts
