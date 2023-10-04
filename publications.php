@@ -8,8 +8,6 @@ Author URI: https://www.linkedin.com/in/mostafa-slim-5ba483127
 */
 
 
-
-
 if (!is_page('publication')) {
   wp_enqueue_script('ajax-script', plugin_dir_url(__FILE__) . 'my-script.js', array('jquery'), false, true);
 
@@ -32,28 +30,37 @@ function my_action()
   $category = $_POST['category'];
   $type = $_POST['type']; 
   $order_by = $_POST['order'];
+  $page=$_POST['page'];
+
   $args = array(
     'post_type' => 'publication',
-    'posts_per_page' => -1, // Show all posts
-    'meta_query' => array(
-      'relation' => 'AND', // You can use 'OR' if needed
-      array(
-          'key' => 'category',
-          'value' => $category,
-          'compare' => '='
-      ),
-      array(
-          'key' => 'type',
-          'value' => $type,
-          'compare' => '='
-      )
-      ),
+    'posts_per_page' => 1, // Show all posts
+    'paged' =>$page,
     'meta_key' => 'date_published',
     'orderby' => 'meta_value',
     'order' => $order_by //
   );
-  echo "kol";
-  // echo publication_cards($args);
+
+  // check if filters is not empty 
+  if(!empty($category) || !empty($type)){
+  $relation='AND';
+  if(empty($category) || empty($type))
+    $relation='OR';
+  $args['meta_query'] = array(
+      'relation' => $relation, // You can use 'OR' if needed
+        array(
+            'key' => 'category',
+            'value' => $category,
+            'compare' => '='
+        ),
+        array(
+            'key' => 'type',
+            'value' => $type,
+            'compare' => '='
+        )
+      );
+   }
+  echo publication_cards($args);
   wp_die();
 }
 
@@ -62,13 +69,12 @@ function my_action()
 function cards_shortcode()
 {
 
-  echo "Hiii ";
   $fields = get_post_type_object('publication');
   $group_fields_id=acf_get_field_groups(array( 'post_type' => 'publication'))[0]['key'];
   $group_fields=acf_get_fields($group_fields_id);
+  $counter=0;
   foreach ($group_fields as $field){
     $field_name = $field['name'];
-    $counter=0;
     if($field_name=='category' || $field_name=='type'){
       $counter++;
     echo   '<select id="select_'.$counter.'" name="'.$field_name.'_filter">
@@ -80,20 +86,22 @@ function cards_shortcode()
   }
    }
    echo '<select id="select_3">
-        <option value"">Sort Results By</option>
-        <option value"DESC">Newest</option>
-        <option value"ASC">Latest</option>
+        <option value="">Sort Results By</option>
+        <option value="DESC">Newest</option>
+        <option value="ASC">Latest</option>
         </select>';
   $args = array(
     'post_type' => 'publication',
-    'posts_per_page' => -1, // Show all posts
+    'posts_per_page' => 1, // Show all posts
   );
 
   wp_enqueue_style('GhiCardsStyles', '/wp-content/plugins/ghi-publications/style.css');
-
   echo '<section id="publication-section" class="mt-5">';
   publication_cards($args);
   echo '</section>';
+  // import jQuery script
+  echo '<button id="load-more-button">Load More</button>';
+  echo '<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>';
 }
 
 
@@ -104,7 +112,7 @@ function publication_cards($args)
   $custom_query = new WP_Query($args);
   if ($custom_query->have_posts()) : echo
     '<div class="container mx-auto">
-    <div class="flex justify-center flex-wrap gap-4">';
+    <div id="card_container" class="flex justify-center flex-wrap gap-4">';
     while ($custom_query->have_posts()) : $custom_query->the_post();
       // Display your post content here
 
