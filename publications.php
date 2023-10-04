@@ -30,14 +30,30 @@ add_action('wp_ajax_nopriv_my_action', 'my_action');
 function my_action()
 {
   $category = $_POST['category'];
-
+  $type = $_POST['type']; 
+  $order_by = $_POST['order'];
   $args = array(
     'post_type' => 'publication',
     'posts_per_page' => -1, // Show all posts
-    'meta_key' => 'programs_divisions',
-    'meta_value' => "$category",
+    'meta_query' => array(
+      'relation' => 'AND', // You can use 'OR' if needed
+      array(
+          'key' => 'category',
+          'value' => $category,
+          'compare' => '='
+      ),
+      array(
+          'key' => 'type',
+          'value' => $type,
+          'compare' => '='
+      )
+      ),
+    'meta_key' => 'date_published',
+    'orderby' => 'meta_value',
+    'order' => $order_by //
   );
-  echo publication_cards($args);
+  echo "kol";
+  // echo publication_cards($args);
   wp_die();
 }
 
@@ -45,15 +61,15 @@ function my_action()
 
 function cards_shortcode()
 {
-  
-  echo '<form class="" action="#" id="publication-form" method="get">';
   $fields = get_post_type_object('publication');
   $group_fields_id=acf_get_field_groups(array( 'post_type' => 'publication'))[0]['key'];
   $group_fields=acf_get_fields($group_fields_id);
   foreach ($group_fields as $field){
     $field_name = $field['name'];
+    $counter=0;
     if($field_name=='category' || $field_name=='type'){
-    echo   '<select id="'.$field_name.'_filter" name="'.$field_name.'_filter">
+      $counter++;
+    echo   '<select id="select_'.$counter.'" name="'.$field_name.'_filter">
     <option value="">Select '.$field_name.'</option>';
     foreach($field['choices'] as $key => $choise){
       echo '<option value="' . $choise . '">' . $choise . '</option>';     
@@ -61,12 +77,11 @@ function cards_shortcode()
     echo '</select>';
   }
    }
-   echo '<select id="date_selected">
+   echo '<select id="select_3">
         <option value"">Sort Results By</option>
         <option value"DESC">Newest</option>
         <option value"ASC">Latest</option>
         </select>';
-  '</form>';
   $args = array(
     'post_type' => 'publication',
     'posts_per_page' => -1, // Show all posts
@@ -83,21 +98,12 @@ function cards_shortcode()
 
 function publication_cards($args)
 {
-  // Check if a category filter is set in the URL
-  // if ($_SERVER["REQUEST_METHOD"] == "GET") {
-  //   if (isset($_GET['category_filter']) && !empty($_GET['category_filter'])) {
-  //       $category_filter = sanitize_text_field($_GET['category_filter']);
-  //       $args['meta_key'] = 'programs_divisions';
-  //       $args['meta_value'] = $category_filter; 
-  //   }
 
-  //   }
   $custom_query = new WP_Query($args);
   if ($custom_query->have_posts()) : echo
     '<div class="container mx-auto">
     <div class="flex justify-center flex-wrap gap-4">';
     while ($custom_query->have_posts()) : $custom_query->the_post();
-      // echo get_the_title();
       // Display your post content here
 
 
