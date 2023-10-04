@@ -28,7 +28,7 @@ add_action('wp_ajax_nopriv_my_action', 'my_action');
 function my_action()
 {
   $category = $_POST['category'];
-  $type = $_POST['type']; 
+  $type = $_POST['type'];
   $order_by = $_POST['order'];
   $page=$_POST['page'];
 
@@ -77,19 +77,22 @@ function cards_shortcode()
     $field_name = $field['name'];
     if($field_name=='category' || $field_name=='type'){
       $counter++;
-    echo   '<select id="select_'.$counter.'" name="'.$field_name.'_filter">
-    <option value="">Select '.$field_name.'</option>';
-    foreach($field['choices'] as $key => $choise){
-      echo '<option value="' . $choise . '">' . $choise . '</option>';     
+      echo   '<select id="select_' . $counter . '" name="' . $field_name . '_filter">
+    <option value="">Select ' . $field_name . '</option>';
+      foreach ($field['choices'] as $key => $choise) {
+        echo '<option value="' . $choise . '">' . $choise . '</option>';
+      }
+      echo '</select>';
     }
-    echo '</select>';
   }
-   }
-   echo '<select id="select_3">
-        <option value="">Sort Results By</option>
-        <option value="DESC">Newest</option>
-        <option value="ASC">Latest</option>
+  echo '<select id="select_3">
+        <option value"">Sort Results By</option>
+        <option value"DESC">Newest</option>
+        <option value"ASC">Latest</option>
         </select>';
+  echo '</div>';
+  /* end filter section */
+
   $args = array(
     'post_type' => 'publication',
     'posts_per_page' => 1, // Show all posts
@@ -209,23 +212,23 @@ function publication_cards($args)
       //       </div>
       //     </div>';
 
-      echo ' <div class="card relative flex flex-col justify-center bg-[#FFF] p-4 border border-[#eee] w-[45%] text-[12px] shadow-[#00000019_0px_20px_25px_-5px,#0000_0px_10px_10px_-5px] transition-all hover:scale-[1.02] hover:shadow-2xl rounded-[6px]">
+      echo ' <div class="relative transition-all duration-500 flex flex-col justify-center bg-[#FFF] p-[17px] border border-[#eee] w-[900px] max-w-[100%] text-[12px] shadow-[#00000019_0px_20px_25px_-5px,#0000_0px_10px_10px_-5px] transition-all hover:scale-[1.02] hover:shadow-2xl rounded-[6px] cursor-pointer">
             <div class="absolute -top-[15px] right-[5px] bg-[#860334] text-white z-30 p-[5px_10px] rounded-[4px]">
               Latest
             </div>
-            <div class="flex gap-5 items-center">
-              <div class="w-[158px] h-[158px] rounded-md overflow-hidden">
+            <div class="flex flex-col sm:flex-row gap-[24px] md:gap-5 items-center">
+              <div class="w-[200px] h-[200px] max-w-[100%] rounded-md overflow-hidden">
                 <img
                   class="bg-cover w-full h-full"
                   src="https://media-ghi.ghi.aub.edu.lb/wp-content/uploads/2023/02/20151440/BLOG-BANNER-2-1024x576.png"
                 />
               </div>
-              <div class="flex-1 flex-col">
-                <h3 class="font-bold text-[12px] text-[black] uppercase leading-[19px] mb-0">
+              <div class="flex flex-1 flex-col items-center md:items-start">
+                <h3 class="font-bold text-[12px] text-[black] uppercase leading-[1.3] mb-0 max-w-[377px] text-center md:text-start">
               The state of cancer research in fragile and conflict-affected settings in the Middle East and North Africa Region: A bibliometric analysis
                 </h3>
                 <span class="block text-xs text-[#888] italic font-[500] m-[6px_0px]">Full Course</span>
-               <div class="flex flex-col gap-[6px]">
+               <div class="flex flex-col">
                  <div
                       class="flex items-center  last:mb-0 gap-2"
                     >
