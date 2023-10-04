@@ -61,6 +61,8 @@ function my_action()
 
 function cards_shortcode()
 {
+
+  echo "Hiii ";
   $fields = get_post_type_object('publication');
   $group_fields_id=acf_get_field_groups(array( 'post_type' => 'publication'))[0]['key'];
   $group_fields=acf_get_fields($group_fields_id);
