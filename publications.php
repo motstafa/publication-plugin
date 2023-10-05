@@ -103,7 +103,10 @@ function cards_shortcode()
   publication_cards($args);
   echo '</section>';
   // import jQuery script
+  echo '<div>';
+  echo '<span id="loader" class="loader"></span>';
   echo '<button id="load-more-button">Load More</button>';
+  echo '</div>';
   echo '<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>';
 }
 

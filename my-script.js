@@ -4,6 +4,10 @@ $(document).ready(function() {
     var page = 2; 
     // Function to handle AJAX request
     function makeAjaxRequest(typeFilter,categoryFilter,dateFilter,load_more) {
+
+        if(!load_more) 
+          page = 1;
+
         var data = {
             'action': 'my_action',
             'type':typeFilter,
@@ -12,13 +16,12 @@ $(document).ready(function() {
             'page':page
         };
           
-        if(!load_more) 
-          data.page = 1;
         // We can also pass the url value separately from ajaxurl for front end AJAX implementations
         jQuery.post(ajax_object.ajax_url, data, function(response) {
             updatePageContent(response,load_more);
-            if(load_more)
-              page++;
+            page++;
+            document.getElementById('load-more-button').style.display="block";  
+            document.getElementById('loader').style.display="none";
         });
         
     
@@ -26,13 +29,13 @@ $(document).ready(function() {
 
     
     function updatePageContent(data,load_more) {
- 
-    const element = document.getElementById("publication-section");       
+        const contentDiv = document.getElementById("publication-section");       
     if(load_more)
       $('#card_container').append(data);
-    // else
-    // $('#card_container').html = data; // Assuming the server returns HTML content
-    }
+    else
+        contentDiv.innerHTML = data; // Assuming the server returns HTML content
+    
+        }
 
 
     // Event handlers for select boxes
@@ -43,16 +46,17 @@ $(document).ready(function() {
 
         makeAjaxRequest(typeFilter, categoryFilter, dateFilter,false);
 
-        // const contentDiv = document.getElementById("publication-section");
-        // contentDiv.innerHTML = 'asdasds'; // Assuming the server returns HTML content
-
     });
 
+
+    // Load more posts
     document.getElementById('load-more-button').addEventListener('click', function () {
         const typeFilter = document.getElementById("select_1").value;
         const categoryFilter = document.getElementById("select_2").value;
         const dateFilter = document.getElementById("select_3").value;
         load_more=true;
+        document.getElementById('loader').style.display="block";
+        document.getElementById('load-more-button').style.display="none";
         makeAjaxRequest(typeFilter, categoryFilter, dateFilter,load_more);      
     });
 });
