@@ -73,6 +73,9 @@ function cards_shortcode()
   $group_fields_id = acf_get_field_groups(array('post_type' => 'publication'))[0]['key'];
   $group_fields = acf_get_fields($group_fields_id);
   $counter = 0;
+
+  /* start filter section */
+  echo '<div class="flex flex-col sm:flex-row justify-center gap-[8px] ">';
   foreach ($group_fields as $field) {
     $field_name = $field['name'];
     if ($field_name == 'category' || $field_name == 'type') {
@@ -91,6 +94,8 @@ function cards_shortcode()
         <option value"ASC">Latest</option>
         </select>';
   echo '</div>';
+  /* end filter section */
+
   /* end filter section */
 
   $args = array(
@@ -227,7 +232,7 @@ function publication_cards($args)
                 />
               </div>
               <div class="flex flex-1 flex-col items-center md:items-start">
-                <h3 class="font-bold text-[12px] text-[black] uppercase leading-[1.3] mb-0 max-w-[377px] text-center md:text-start">
+                <h3  class="font-bold text-[12px] text-[black] uppercase leading-[1.3] mb-0 max-w-[377px]">
               The state of cancer research in fragile and conflict-affected settings in the Middle East and North Africa Region: A bibliometric analysis
                 </h3>
                 <span class="block text-xs text-[#888] italic font-[500] m-[6px_0px]">Full Course</span>
