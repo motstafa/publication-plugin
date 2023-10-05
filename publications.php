@@ -31,7 +31,6 @@ function my_action()
   $type = $_POST['type'];
   $order_by = $_POST['order'];
   $page=$_POST['page'];
-
   $args = array(
     'post_type' => 'publication',
     'posts_per_page' => 1, // Show all posts
@@ -96,6 +95,7 @@ function cards_shortcode()
   $args = array(
     'post_type' => 'publication',
     'posts_per_page' => 1, // Show all posts
+    'paged' =>get_query_var('paged'), // Show
   );
 
   wp_enqueue_style('GhiCardsStyles', '/wp-content/plugins/ghi-publications/style.css');
@@ -114,15 +114,12 @@ function cards_shortcode()
 
 function publication_cards($args)
 {
-
   $custom_query = new WP_Query($args);
   if ($custom_query->have_posts()) : echo
     '<div class="container mx-auto">
     <div id="card_container" class="flex justify-center flex-wrap gap-4">';
     while ($custom_query->have_posts()) : $custom_query->the_post();
       // Display your post content here
-
-
       // echo '<div class="card flex flex-col p-1 bg-[#FFF] border border-[#eee] w-[300px] min-h-[300px] text-[12px] shadow-[#00000019_0px_20px_25px_-5px,#0000_0px_10px_10px_-5px]">
       //         <div class="lines"></div>
 
