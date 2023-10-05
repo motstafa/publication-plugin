@@ -30,36 +30,36 @@ function my_action()
   $category = $_POST['category'];
   $type = $_POST['type'];
   $order_by = $_POST['order'];
-  $page=$_POST['page'];
+  $page = $_POST['page'];
 
   $args = array(
     'post_type' => 'publication',
     'posts_per_page' => 1, // Show all posts
-    'paged' =>$page,
+    'paged' => $page,
     'meta_key' => 'date_published',
     'orderby' => 'meta_value',
     'order' => $order_by //
   );
 
   // check if filters is not empty 
-  if(!empty($category) || !empty($type)){
-  $relation='AND';
-  if(empty($category) || empty($type))
-    $relation='OR';
-  $args['meta_query'] = array(
+  if (!empty($category) || !empty($type)) {
+    $relation = 'AND';
+    if (empty($category) || empty($type))
+      $relation = 'OR';
+    $args['meta_query'] = array(
       'relation' => $relation, // You can use 'OR' if needed
-        array(
-            'key' => 'category',
-            'value' => $category,
-            'compare' => '='
-        ),
-        array(
-            'key' => 'type',
-            'value' => $type,
-            'compare' => '='
-        )
-      );
-   }
+      array(
+        'key' => 'category',
+        'value' => $category,
+        'compare' => '='
+      ),
+      array(
+        'key' => 'type',
+        'value' => $type,
+        'compare' => '='
+      )
+    );
+  }
   echo publication_cards($args);
   wp_die();
 }
@@ -70,12 +70,12 @@ function cards_shortcode()
 {
 
   $fields = get_post_type_object('publication');
-  $group_fields_id=acf_get_field_groups(array( 'post_type' => 'publication'))[0]['key'];
-  $group_fields=acf_get_fields($group_fields_id);
-  $counter=0;
-  foreach ($group_fields as $field){
+  $group_fields_id = acf_get_field_groups(array('post_type' => 'publication'))[0]['key'];
+  $group_fields = acf_get_fields($group_fields_id);
+  $counter = 0;
+  foreach ($group_fields as $field) {
     $field_name = $field['name'];
-    if($field_name=='category' || $field_name=='type'){
+    if ($field_name == 'category' || $field_name == 'type') {
       $counter++;
       echo   '<select id="select_' . $counter . '" name="' . $field_name . '_filter">
     <option value="">Select ' . $field_name . '</option>';
@@ -103,9 +103,9 @@ function cards_shortcode()
   publication_cards($args);
   echo '</section>';
   // import jQuery script
-  echo '<div>';
   echo '<span id="loader" class="loader"></span>';
-  echo '<button id="load-more-button">Load More</button>';
+  echo '<div>';
+  echo '<button class="block mt-3 mx-auto text-[11px] bg-[transparent] p-[4px_16px] font-[500] mt-[14px] rounded-[4px] uppercase border-[1px] border-solid border-[#860334] text-[#860334] transition-all duration-500 hover:bg-[#860334] hover:text-white" id="load-more-button">Load More</button>';
   echo '</div>';
   echo '<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>';
 }

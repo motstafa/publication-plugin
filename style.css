@@ -1,6 +1,6 @@
 .load-more-button{
     width: fit-content;
-    display: block;
+    display: none;
     margin: 50px auto 0;
     color: white;
     border: none;
@@ -11,13 +11,14 @@
 
 .loader, .loader:before, .loader:after {
     border-radius: 50%;
-    width: 2.5em;
-    height: 2.5em;
+    width: 9px !important;  
+    height: 9px;
     animation-fill-mode: both;
     animation: bblFadInOut 1.8s infinite ease-in-out;
   }
   .loader {
-    display:none;
+    display: none;
+    margin: auto;
     color: #860334;;
     font-size: 7px;
     position: relative;
@@ -32,11 +33,11 @@
     top: 0;
   }
   .loader:before {
-    left: -3.5em;
+    left: -14px;
     animation-delay: -0.32s;
   }
   .loader:after {
-    left: 3.5em;
+    left: 14px;
   }
   
   @keyframes bblFadInOut {
