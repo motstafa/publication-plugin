@@ -1,13 +1,16 @@
 
 $(document).ready(function() {
 
-    var page = 2; 
+    var page = 2;
+    var counter = 2;
+    var max_page_number; 
     // Function to handle AJAX request
     function makeAjaxRequest(typeFilter,categoryFilter,dateFilter,load_more) {
 
-        if(!load_more) 
+        if(!load_more){ 
           page = 1;
-
+          counter=1;
+        }
         var data = {
             'action': 'my_action',
             'type':typeFilter,
@@ -15,14 +18,19 @@ $(document).ready(function() {
             'order':dateFilter,
             'page':page
         };
-          
         // We can also pass the url value separately from ajaxurl for front end AJAX implementations
         jQuery.post(ajax_object.ajax_url, data, function(response) {
-            updatePageContent(response,load_more);
+            updatePageContent(response.html,load_more);
+            if(counter==response.max_page_number) {
+                document.getElementById('load-more-button').style.display="none";        
+              }
+            else {
+                document.getElementById('load-more-button').style.display="block";
+              }  
             page++;
-            document.getElementById('load-more-button').style.display="block";  
+            counter++;
             document.getElementById('loader').style.display="none";
-        });
+        },"json");
         
     
     }
