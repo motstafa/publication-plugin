@@ -3,7 +3,6 @@ $(document).ready(function() {
 
     var page = 2;
     var counter = 2;
-    var max_page_number; 
     // Function to handle AJAX request
     function makeAjaxRequest(typeFilter,categoryFilter,dateFilter,load_more) {
 
